@@ -50,7 +50,7 @@ class OneInchExchange:
             data = None
         return data
 
-    def _get_asynch(self, session, url, params=None, headers=None):
+    async def _get_asynch(self, session, url, params=None, headers=None):
         """ Implements a get request """
         try:
             response = await session.get(url, params=params, headers=headers)
@@ -116,7 +116,7 @@ class OneInchExchange:
         result = self._get(url)
         return result
 
-    def get_quote_asynch(self, session, from_token_symbol:str, to_token_symbol:str, amount:float):
+    async def get_quote_asynch(self, session, from_token_symbol:str, to_token_symbol:str, amount:float):
         url = '{}/{}/{}/quote'.format(
             self.base_url, self.version, self.chain_id)
         url = url + '?fromTokenAddress={}&toTokenAddress={}&amount={}'.format(
@@ -124,7 +124,7 @@ class OneInchExchange:
             self.tokens[to_token_symbol]['address'],
             format(Decimal(10**self.tokens[from_token_symbol]['decimals'] \
                 * amount).quantize(Decimal('1.')), 'n'))
-        result = self._get_asynch(session, url)
+        result = await self._get_asynch(session, url)
         return result
 
 
@@ -142,7 +142,7 @@ class OneInchExchange:
         result = self._get(url)
         return result
 
-    def do_swap_asynch(self, session, from_token_symbol:str, to_token_symbol:str,
+    async def do_swap_asynch(self, session, from_token_symbol:str, to_token_symbol:str,
         amount:float, slippage:int):
         url = '{}/{}/{}/swap'.format(
             self.base_url, self.version, self.chain_id)
@@ -153,7 +153,7 @@ class OneInchExchange:
                            * amount).quantize(Decimal('1.')), 'n'))
         url = url + '&fromAddress={}&slippage={}'.format(
             self.address, slippage)
-        result = self._get_asynch(session, url)
+        result = await self._get_asynch(session, url)
         return result
 
     def convert_amount_to_decimal(self, token_symbol, amount):
