@@ -53,7 +53,7 @@ class OneInchExchange:
     async def _get_asynch(self, session, url, params=None, headers=None):
         """ Implements a get request """
         try:
-            response = await session.get(url, params=params, headers=headers)
+            response = await session.get(url, params=params, headers=headers, ssl=False)
             payload = await response.json()
             data = payload
         except requests.exceptions.ConnectionError as e:
